@@ -72,7 +72,7 @@ process.maxEvents.input = options.maxEvents
 # Default file here for test purpose
 if not options.inputFiles:
     if useMiniAOD:
-        process.source.fileNames = cms.untracked.vstring('file:/pnfs/knu.ac.kr/data/cms/store/user/jipark/public/cat10x_samples/TTToSemiLeptonic_062A981D-4A57-664A-A583-E803A658594B.root')
+        process.source.fileNames = cms.untracked.vstring('root://cms-xrd-global.cern.ch///store/mc/RunIIAutumn18MiniAOD/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15_ext3-v2/50001/FF6DF5A4-61D3-E541-8BA5-A9BE557DB03F.root')
 
 else:
     process.source.fileNames = options.inputFiles
