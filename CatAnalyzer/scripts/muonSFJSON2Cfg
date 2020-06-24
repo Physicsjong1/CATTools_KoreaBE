@@ -1,0 +1,131 @@
+#!/usr/bin/env python
+
+import sys, os
+from math import hypot, sqrt
+
+#muonSFBase = "%s/src/CATTools/CatAnalyzer/data/scaleFactors" % os.environ["CMSSW_BASE"]
+#muonSFBase = "/afs/cern.ch/cms/Physics/muon/ReferenceEfficiencies/Run2015/25ns"
+#muonSFBase = "/afs/cern.ch/cms/Physics/muon/ReferenceEfficiencies/Run2016/25ns/proviSFs_7p65"
+muonSFBase = "."
+if not os.path.exists("%s/MuonID.json" % muonSFBase) or \
+   not os.path.exists("%s/MuonIso.json" % muonSFBase):
+   #not os.path.exists("%s/SingleMuonTrigger_Z_RunCD_Reco76_Feb15.json" % muonSFBase):
+    print "Cannot find SF json files under", muonSFBase
+    print "Please download them from the official muon twiki page,"
+    print "https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffsRun2"
+    print "and place under %s" % muonSFBase
+    sys.exit(1)
+
+import json
+
+muonJSId  = json.loads(open("%s/MuonID.json" % muonSFBase).read())
+muonJSIso = json.loads(open("%s/MuonIso.json" % muonSFBase).read())
+#muonJSTrg = json.loads(open("%s/SingleMuonTrigger_Z_RunCD_Reco76_Feb15.json" % muonSFBase).read())
+
+muonIdSFName = 'MC_NUM_TightID_DEN_genTracks_PAR_pt_eta'
+muonIsoSFName = 'TightISO_TightID_pt_eta'
+
+if muonIdSFName not in muonJSId:
+    print "Cannot find interested ID variable"
+    print "Tried : ", muonIdSFName
+    print "Available keys:"
+    print sorted(muonJSId.keys())
+    sys.exit(1)
+if muonIsoSFName not in muonJSIso:
+    print "Cannot find interested Iso variable"
+    print "Tried : ", muonIsoSFName
+    print "Available keys:"
+    print sorted(muonJSIso.keys())
+    sys.exit(1)
+
+def extract(js):
+    xbins, ybins = [], []
+    values = {}
+    errors = {}
+    for xkey in js:
+        xlo, xhi = eval(xkey[xkey.index('[')+1:-1])
+        xbins.extend([xlo, xhi])
+        for ykey in js[xkey]:
+            ylo, yhi = eval(ykey[ykey.index('[')+1:-1])
+            ybins.extend([ylo, yhi])
+
+            v = js[xkey][ykey]
+            values[(xlo, ylo)] = v['value']
+            errors[(xlo, ylo)] = v['error']
+
+    return sorted(list(set(xbins))), sorted(list(set(ybins))), values, errors
+
+print "==== SF for ID ===="
+pt_bins_id, abseta_bins_id, values_id, errors_id = extract(muonJSId[muonIdSFName]['pt_abseta_ratio'])
+print """cms.PSet(
+    # Values of "%s"
+    pt_bins = cms.vdouble(%s),
+    abseta_bins = cms.vdouble(%s),""" % (muonIdSFName, 
+       (", ".join(["%g" % x for x in pt_bins_id])),
+       (", ".join(["%g" % x for x in abseta_bins_id])))
+print "    values = cms.vdouble("
+for abseta in abseta_bins_id[:-1]:
+    print "       ",
+    for pt in pt_bins_id[:-1]:
+        print "%g," % values_id[(pt, abseta)],
+    print ""
+print """    ),
+    errors = cms.vdouble("""
+for abseta in abseta_bins_id[:-1]:
+    print "       ",
+    for pt in pt_bins_id[:-1]:
+        print "%g," % sqrt(errors_id[(pt, abseta)]**2+1e-2**2+5e-3**2), ## 1% systematic error, additional 0.5% due to HIPs
+    print ""
+print"""    ),
+)"""
+
+print "==== SF for Iso ===="
+pt_bins_iso, abseta_bins_iso, values_iso, errors_iso = extract(muonJSIso[muonIsoSFName]['pt_abseta_ratio'])
+print """cms.PSet(
+    # Values of "%s"
+    pt_bins = cms.vdouble(%s),
+    abseta_bins = cms.vdouble(%s),""" % (muonIsoSFName, 
+       (", ".join(["%g" % x for x in pt_bins_iso])),
+       (", ".join(["%g" % x for x in abseta_bins_iso])))
+print "    values = cms.vdouble("
+for abseta in abseta_bins_iso[:-1]:
+    print "       ",
+    for pt in pt_bins_iso[:-1]:
+        print "%g," % values_iso[(pt, abseta)],
+    print ""
+print """    ),
+    errors = cms.vdouble("""
+for abseta in abseta_bins_iso[:-1]:
+    print "       ",
+    for pt in pt_bins_iso[:-1]:
+        print "%g," % sqrt(errors_iso[(pt, abseta)]**2+1e-2**2), ## 1% for tight PF isolation
+    print ""
+print"""    ),
+)"""
+
+print "==== SF for ID + Iso ===="
+if abseta_bins_id != abseta_bins_iso or pt_bins_iso != pt_bins_id:
+    print "Two SF uses different binning. skip."
+else:
+    print """cms.PSet(
+    # Values of "%s + %s"
+    pt_bins = cms.vdouble(%s),
+    abseta_bins = cms.vdouble(%s),""" % (muonIdSFName, muonIsoSFName,
+           (", ".join(["%g" % x for x in pt_bins_iso])),
+           (", ".join(["%g" % x for x in abseta_bins_iso])))
+    print "    values = cms.vdouble("
+    for abseta in abseta_bins_iso[:-1]:
+        print "       ",
+        for pt in pt_bins_iso[:-1]:
+            print "%g," % (values_id[(pt, abseta)]*values_iso[(pt, abseta)]),
+        print ""
+    print """    ),
+    errors = cms.vdouble("""
+    for abseta in abseta_bins_iso[:-1]:
+        print "       ",
+        for pt in pt_bins_iso[:-1]:
+            print "%g," % sqrt(errors_id[(pt, abseta)]**2+1e-2**2+5e-3**2
+                              +errors_iso[(pt, abseta)]**2+1e-2**2),
+        print ""
+    print"""    ),
+)"""

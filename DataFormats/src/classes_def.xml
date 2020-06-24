@@ -1,0 +1,91 @@
+<lcgdict>
+  <class name="std::vector<std::vector<std::string> >" />
+  <class name="edm::Wrapper<std::vector<std::vector<std::string> > >" />
+  <class name="edm::Ptr<std::vector<std::vector<std::string> > >" />
+
+
+  <class name="cat::Particle"/>
+  <class name="std::vector<cat::Particle>"/>
+  <class name="edm::Wrapper<cat::Particle>"/>
+  <class name="edm::Wrapper<std::vector<cat::Particle> >"/>
+  <class name="edm::Ptr<cat::Particle>"/>
+
+  <class name="cat::Lepton"/>
+  <class name="std::vector<cat::Lepton>"/>
+  <class name="edm::Wrapper<cat::Lepton>"/>
+  <class name="edm::Wrapper<std::vector<cat::Lepton> >"/>
+  <class name="edm::Ptr<cat::Lepton>"/>
+  
+  <class name="cat::Muon"/>
+  <class name="std::vector<cat::Muon>"/>
+  <class name="edm::Wrapper<cat::Muon>"/>
+  <class name="edm::Wrapper<std::vector<cat::Muon> >"/>
+  <class name="edm::Ptr<cat::Muon>"/>
+
+  <class name="cat::Electron"/>
+  <class name="std::vector<cat::Electron>"/>
+  <class name="edm::Wrapper<cat::Electron>"/>
+  <class name="edm::Wrapper<std::vector<cat::Electron> >"/>
+  <class name="edm::Ptr<cat::Electron>"/>
+
+  <class name="cat::Photon"/>
+  <class name="std::vector<cat::Photon>"/>
+  <class name="edm::Wrapper<cat::Photon>"/>
+  <class name="edm::Wrapper<std::vector<cat::Photon> >"/>
+  <class name="edm::Ptr<cat::Photon>"/>
+
+  <class name="cat::Jet"/>
+  <class name="std::vector<cat::Jet>"/>
+  <class name="edm::Wrapper<cat::Jet>"/>
+  <class name="edm::Wrapper<std::vector<cat::Jet> >"/>
+  <class name="edm::Ptr<cat::Jet>"/>
+
+  <class name="cat::Tau"/>
+  <class name="std::vector<cat::Tau>"/>
+  <class name="edm::Wrapper<cat::Tau>"/>
+  <class name="edm::Wrapper<std::vector<cat::Tau> >"/>
+  <class name="edm::Ptr<cat::Tau>"/>
+
+  <class name="cat::MET"/>
+  <class name="std::vector<cat::MET>"/>
+  <class name="edm::Wrapper<cat::MET>"/>
+  <class name="edm::Wrapper<std::vector<cat::MET> >"/>
+  <class name="edm::Ptr<cat::MET>"/>
+
+  <class name="cat::MCParticle"/>
+  <class name="std::vector<cat::MCParticle>"/>
+  <class name="edm::Wrapper<cat::MCParticle>"/>
+  <class name="edm::Wrapper<std::vector<cat::MCParticle> >"/>
+  <class name="edm::Ptr<cat::MCParticle>"/>
+
+  <class name="cat::GenJet"/>
+  <class name="std::vector<cat::GenJet>"/>
+  <class name="edm::Wrapper<cat::GenJet>"/>
+  <class name="edm::Wrapper<std::vector<cat::GenJet> >"/>
+  <class name="edm::Ptr<cat::GenJet>"/>
+
+  <class name="cat::GenTop"/>
+  <class name="std::vector<cat::GenTop>"/>
+  <class name="edm::Wrapper<cat::GenTop>"/>
+  <class name="edm::Wrapper<std::vector<cat::GenTop> >"/>
+  <class name="edm::Ptr<cat::GenTop>"/>
+
+  <class name="reco::CompositePtrCandidateCollection" />
+  <class name="edm::Wrapper<reco::CompositePtrCandidateCollection>" />
+  <class name="edm::reftobase::Holder<reco::Candidate, reco::CompositePtrCandidateRef>" />
+  <class name="edm::reftobase::RefHolder<reco::CompositePtrCandidateRef>" />
+  <class name="edm::reftobase::VectorHolder<reco::Candidate, reco::CompositePtrCandidateRefVector>" />
+  <class name="edm::reftobase::RefVectorHolder<reco::CompositePtrCandidateRefVector>" />
+
+  <class name="cat::GenWeights" />
+  <class name="edm::Wrapper<cat::GenWeights>" />
+
+  <class name="cat::GenWeightInfo" />
+  <class name="edm::Wrapper<cat::GenWeightInfo>" />
+
+  <class name="cat::TriggerBits" />
+  <class name="edm::Wrapper<cat::TriggerBits>" />
+
+  <class name="cat::TriggerNames" />
+  <class name="edm::Wrapper<cat::TriggerNames>" />
+</lcgdict>
